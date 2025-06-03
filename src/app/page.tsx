@@ -12,20 +12,22 @@ export default function HomePage() {
         <meta name="description" content="Generate or validate your exam certificates" />
       </Head>
 
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex flex-col items-center justify-center p-4">
+      <div className="min-h-screen  flex flex-col items-center justify-center p-4 bg-cover lg:bg-top bg-center" style={{backgroundImage:"url(/bg.png)"}}>
         <div className="w-full max-w-4xl mx-auto text-center">
-          <h1 className="text-4xl md:text-5xl font-bold text-gray-800 mb-6">
+          <div className='bg-gray-300/20 border-2 bg-opacity-50 px-16 py-4 mb-12 shadow-lg backdrop-blur-xs max-sm:px-8 text-white lg:rounded-full rounded-xl' >
+            <h1 className="text-4xl md:text-5xl font-bold text-gray-800 mb-6">
             Exam Certificate Portal
           </h1>
-          <p className="text-lg text-gray-600 mb-12 max-w-2xl mx-auto">
+          <p className="text-lg text-gray-600  max-w-2xl mx-auto">
             Generate your exam access certificate or validate an existing one
           </p>
+          </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             {/* Generate Certificate Card */}
             <div 
               onClick={() => router.push('/generate')}
-              className="group bg-white rounded-xl shadow-lg overflow-hidden transition-all duration-300 hover:shadow-xl hover:-translate-y-2 cursor-pointer"
+              className="group bg-white rounded-xl border shadow-lg overflow-hidden transition-all duration-300 hover:shadow-xl hover:-translate-y-2 cursor-pointer"
             >
               <div className="p-8">
                 <div className="w-20 h-20 bg-indigo-100 group-hover:bg-indigo-200 rounded-full flex items-center justify-center mb-6 mx-auto transition-colors duration-300">
@@ -44,7 +46,7 @@ export default function HomePage() {
             {/* Validate Certificate Card */}
             <div 
               onClick={() => router.push('/validate')}
-              className="group bg-white rounded-xl shadow-lg overflow-hidden transition-all duration-300 hover:shadow-xl hover:-translate-y-2 cursor-pointer"
+              className="group bg-white rounded-xl border shadow-lg overflow-hidden transition-all duration-300 hover:shadow-xl hover:-translate-y-2 cursor-pointer"
             >
               <div className="p-8">
                 <div className="w-20 h-20 bg-green-100 group-hover:bg-green-200 rounded-full flex items-center justify-center mb-6 mx-auto transition-colors duration-300">

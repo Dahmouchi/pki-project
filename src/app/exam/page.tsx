@@ -1,3 +1,5 @@
+/* eslint-disable @next/next/no-img-element */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
@@ -7,42 +9,6 @@ import { RadioGroup } from "@/components/ui/radio-group";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
 import { ArrowLeft, ArrowRight, CalendarDays, Check, CheckCheck, CheckCircle, CircleGauge, Clock, Download, Flag, Percent, User, X } from "lucide-react";
-
-export default function CryptographyExam() {
-  const [currentQuestion, setCurrentQuestion] = useState(0);
-  const [answers, setAnswers] = useState<Record<number, string>>({});
-  const [score, setScore] = useState<number>(0);
-  const [isSubmitted, setIsSubmitted] = useState(false);
-  const router = useRouter();
-  const [isValidated, setIsValidated] = useState(false);
-
-const [studentData, setStudentData] = useState<any>();
-
-useEffect(() => {
-  // Check for certificate validation in session storage
-  const certValidated = sessionStorage.getItem('certValidated');
-  const studentInfo = sessionStorage.getItem('studentInfo');
-  
-  if (!certValidated) {
-    router.push('/validate');
-  } else {
-    setIsValidated(true);
-    
-    if (studentInfo) {
-      try {
-        const parsedInfo = JSON.parse(studentInfo);
-        setStudentData(parsedInfo);
-      } catch (error) {
-        console.error('Error parsing student info:', error);
-      }
-    }
-  }
-}, [router]);
-
-  if (!isValidated) {
-    return null; // or a loading spinner
-  }
-  // Cryptography exam questions
 const questions = [
   {
     question: "Which of the following is a symmetric encryption algorithm?",
@@ -105,6 +71,60 @@ const questions = [
     image: "https://positiwise.com/blog/wp-content/uploads/2023/08/hash-function.png"
   }
 ];
+export default function CryptographyExam() {
+  const [currentQuestion, setCurrentQuestion] = useState(0);
+  const [answers, setAnswers] = useState<Record<number, string>>({});
+  const [score, setScore] = useState<number>(0);
+  const [isSubmitted, setIsSubmitted] = useState(false);
+  const router = useRouter();
+  const [isValidated, setIsValidated] = useState(false);
+  const [finalTime, setFinalTime] = useState(0);
+
+ const formatTime = (seconds:any) => {
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+  };
+const [studentData, setStudentData] = useState<any>();
+const [timeRemaining, setTimeRemaining] = useState(45 * 60); // 45 minutes in seconds
+useEffect(() => {
+  // Check for certificate validation in session storage
+  const certValidated = sessionStorage.getItem('certValidated');
+  const studentInfo = sessionStorage.getItem('studentInfo');
+  const timer = setInterval(() => {
+      setTimeRemaining(prevTime => {
+        if (prevTime <= 0) {
+          clearInterval(timer);
+          return 0;
+        }
+        return prevTime - 1;
+      });
+    }, 1000);
+
+    // Clean up the interval when component unmounts
+  if (!certValidated) {
+    router.push('/validate');
+  } else {
+    setIsValidated(true);
+    
+    if (studentInfo) {
+      try {
+        const parsedInfo = JSON.parse(studentInfo);
+        setStudentData(parsedInfo);
+      } catch (error) {
+        console.error('Error parsing student info:', error);
+      }
+    }
+  }
+    return () => clearInterval(timer);
+
+}, [router]);
+
+  if (!isValidated) {
+    return null; // or a loading spinner
+  }
+  // Cryptography exam questions
+
   const handleAnswerSelect = (value: string) => {
     setAnswers(prev => ({
       ...prev,
@@ -127,7 +147,6 @@ const questions = [
     sessionStorage.removeItem("studentInfo")
     sessionStorage.removeItem("certValidated")
     router.push("/")
-
   };
   const handleSubmit = () => {
     let correct = 0;
@@ -137,14 +156,16 @@ const questions = [
       }
     });
     setScore(correct);
+    setFinalTime((45 * 60) - timeRemaining); 
     setIsSubmitted(true);
   };
   const progressValue = ((currentQuestion + 1) / questions.length) * 100;
 
   if (isSubmitted) {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-50 p-4 md:p-8">
-      <div className="max-w-4xl mx-auto">
+    <div className="min-h-screen  p-4 md:p-8 bg-contain bg-repeat relative "  style={{backgroundImage:"url(/bg-3.jpg)"}}>
+    <div className="bg-black/20 absolute top-0 right-0 w-full h-full z-0 backdrop-blur-xs"></div>
+      <div className="max-w-4xl mx-auto z-50 relative">
         {/* Student Info Header */}
         <div className="bg-white rounded-xl shadow-md p-6 mb-6 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
           <div>
@@ -193,7 +214,7 @@ const questions = [
             <p className="text-sm text-gray-500">Time Taken</p>
             <div className="flex items-center justify-center gap-2 mt-2">
               <Clock className="w-5 h-5 text-indigo-600" />
-              <p className="text-3xl font-bold text-gray-800">24:35</p>
+              <p className="text-3xl font-bold text-gray-800">{formatTime(finalTime)}</p>
             </div>
           </div>
         </div>
@@ -259,10 +280,11 @@ const questions = [
 }
 
 return (
-  <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-50 p-4 md:p-8">
-    <div className="max-w-4xl mx-auto">
+  <div className="min-h-screen  p-4 md:p-8 bg-contain bg-repeat relative "  style={{backgroundImage:"url(/bg-3.jpg)"}}>
+    <div className="bg-black/20 absolute top-0 right-0 w-full h-full z-0 backdrop-blur-xs"></div>
+    <div className="max-w-4xl mx-auto z-50 relative">
       {/* Student Info Header */}
-      <div className="bg-white rounded-xl shadow-md p-6 mb-6 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+      <div className="bg-white  rounded-xl shadow-md p-6 mb-6 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
         <div>
           <h1 className="text-2xl font-bold text-gray-800">Cryptography Exam</h1>
           <div className="flex items-center gap-2 mt-2">
@@ -280,7 +302,7 @@ return (
             <p className="text-sm text-gray-600">Time Remaining</p>
             <p className="font-semibold text-indigo-700 flex items-center gap-1">
               <Clock className="w-4 h-4" />
-              45:22
+              {formatTime(timeRemaining)}
             </p>
           </div>
           <div className="bg-indigo-50 px-4 py-3 rounded-lg">
